@@ -1,4 +1,4 @@
-import { LitElement, type PropertyValueMap } from 'lit';
+import { LitElement, type PropertyValueMap, type TemplateResult } from 'lit';
 import type * as AceGlobal from 'ace-builds';
 import { EditV2, Transactor } from '@openscd/oscd-api';
 import AceEditor from 'ace-custom-element';
@@ -39,6 +39,18 @@ export default class OscdEditorSource extends OscdEditorSource_base {
     _initialXmlText: string;
     aceEditor: AceEditor;
     warnDialog: WarnDialog;
+    private isValidating;
+    private validationIssues;
+    private hasValidationRun;
+    private validationOnNavigate?;
+    private selectedIssueIndex;
+    private validationPanelWidth;
+    private isResizingValidationPanel;
+    private validationPanelResizeStartX;
+    private validationPanelResizeStartWidth;
+    private handleValidationPanelResizeStart;
+    private handleValidationPanelResizeMove;
+    private handleValidationPanelResizeEnd;
     connectedCallback(): void;
     disconnectedCallback(): void;
     private handleAceChange;
@@ -46,9 +58,22 @@ export default class OscdEditorSource extends OscdEditorSource_base {
     expandAll(): void;
     formatXml(): void;
     openSettings(): void;
+    /**
+     * Find the line number of an XML element within the editor's text by
+     * searching for its opening tag with identifying attributes.
+     */
+    private findElementLine;
+    private navigateToIssue;
+    private showValidationResults;
+    private handleIssueClick;
+    private clearValidationResults;
+    private getValidationIssueSummary;
+    private renderValidationIssue;
+    private renderValidationPanel;
+    validateDocument(): Promise<void>;
     applyChanges(): void;
     protected updated(changedProps: PropertyValueMap<OscdEditorSource>): void;
-    render(): import("lit-html").TemplateResult<1>;
+    render(): TemplateResult<1>;
     static styles: import("lit").CSSResult;
 }
 export {};
